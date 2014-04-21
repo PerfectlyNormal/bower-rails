@@ -171,14 +171,20 @@ def resolve_asset_paths
       directory_path = Pathname.new(File.dirname(filename))
         .relative_path_from(Pathname.new('bower_components'))
 
+      asset_dependencies = []
+
       # Replace relative paths in URLs with Rails asset_path helper
       new_contents = contents.gsub(url_regex) do |match|
         relative_path = $1
         image_path = directory_path.join(relative_path).cleanpath
         puts "#{match} => #{image_path}"
 
+        asset_dependencies << "//= depend_on_asset #{image_path}"
         "url(<%= asset_path '#{image_path}' %>)"
       end
+
+      # Prepend depend_on_asset comments for Sprockets
+      new_contents = asset_dependencies.join("\n") + "\n" + new_contents
 
       # Replace CSS with ERB CSS file with resolved asset paths
       FileUtils.rm(filename)
