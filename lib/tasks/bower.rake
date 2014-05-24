@@ -190,7 +190,7 @@ def resolve_asset_paths
       end
 
       # Prepend depend_on_asset comments for Sprockets
-      new_contents = asset_dependencies.join("\n") + "\n" + new_contents
+      new_contents = asset_dependencies.join("\n") + "\n\n" + new_contents
 
       # Replace CSS with ERB CSS file with resolved asset paths
       FileUtils.rm(filename)
