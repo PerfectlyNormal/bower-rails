@@ -22,7 +22,7 @@ Check out [changelog][] for the latest changes and releases.
 in Gemfile
 
 ``` Ruby
-  gem "bower-rails", "~> 0.7.1"
+  gem "bower-rails", "~> 0.7.3"
 ```
 
 ##JSON configuration
@@ -77,10 +77,15 @@ By default assets are put to `./vendor/assets/bower_components` directory:
 asset "backbone"
 asset "moment", "2.0.0" # get exactly version 2.0.0
 asset "secret_styles", "git@github.com:initech/secret_styles" # get from a git repo
+
 # get from a git repo using the tag 1.0.0
 asset "secret_logic", "1.0.0", git: "git@github.com:initech/secret_logic"
-# short-hand for
-# asset "secret_logic", "git@github.com:initech/secret_logic#1.0.0"
+
+# get from a github repo
+asset "secret_logic", "1.0.0", github: "initech/secret_logic"
+
+# get a specific revision from a git endpoint 
+asset "secret_logic", github: "initech/secret_logic", ref: '0adff'
 ```
 
 But the default value can be overridden by `assets_path` method:
@@ -100,7 +105,7 @@ assets_path "assets/javascript"
 
 # Puts files under ./vendor/assets/js/bower_components
 group :vendor, :assets_path => "assets/js"  do
-  asset "jquery"            # Assummes it's latests
+  asset "jquery"            # Defaults to 'latest'
   asset "backbone", "1.1.1"
 end
 
@@ -120,10 +125,24 @@ Change options in your `config/initializers/bower_rails.rb`:
 ``` ruby
 BowerRails.configure do |bower_rails|
   # By default options are false
+  bower_rails.install_before_precompile = true # invokes rake bower:install before precompilation
   bower_rails.resolve_before_precompile = true # invokes rake bower:resolve before precompilation
   bower_rails.clean_before_precompile = true   # invokes rake bower:clean before precompilation
 end
 ```
+
+If you are using Rails version < 4.0.0 then you are to require `bower_rails.rb` initializer manually in `application.rb`:
+
+```ruby
+module YourAppName
+  class Application < Rails::Application
+    require "#{Rails.root}/config/initializers/bower_rails.rb"
+    ...
+  end
+end
+```
+
+By default this line is added while running the generator.
 
 ##Rake tasks
 

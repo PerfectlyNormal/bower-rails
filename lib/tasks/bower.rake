@@ -2,6 +2,8 @@ require 'json'
 require 'pp'
 require 'find'
 
+include BeforeHook
+
 namespace :bower do
   desc "Install components from bower"
   task :install, :options do |_, args|
@@ -51,7 +53,11 @@ namespace :bower do
   end
 end
 
-BowerRails.enhance_tasks
+before 'assets:precompile' do
+  BowerRails.tasks.map do |task|
+    Rake::Task[task].invoke
+  end
+end
 
 def perform remove_components = true, &block
   entries = Dir.entries(get_bower_root_path)
@@ -63,7 +69,7 @@ def perform remove_components = true, &block
     $stderr.puts <<EOS
 Bower not found! You can install Bower using Node and npm:
 $ npm install bower -g
-For more info see http://twitter.github.com/bower/
+For more info see http://bower.io/
 EOS
     return
   end
@@ -235,7 +241,7 @@ def find_command(cmd, paths = [])
   paths.each do |path|
     exts.each do |ext|
       exe = File.join(path, "#{cmd}#{ext}")
-      return exe if File.executable? exe
+      return exe if (File.executable?(exe) && File.file?(exe))
     end
   end
   nil

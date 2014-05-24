@@ -1,14 +1,28 @@
 ## Edge version
 
+## v0.7.3
+
+* Add `install_before_precompile` configurable option to invoke `rake bower:install` before precompilation
+* DSL: Add ability to specify `ref` option which accepts commit's SHA and composes it as a component's version
+* Fix NoMethodError: undefined method `full_comment' for nil:NilClass. Check for `rake assets:precompile` task existance.
+
+## v0.7.2
+
 * add configurable option for performing `rake bower:install` and `rake bower:clean` tasks before assets precompilation
 * add ability to pass bower CLI options to bower-rails rake tasks if nessesary
 * `rake bower:clean` task added to remove any component files not specified in their respective bower.json main directives by @paulnsorensen [#65][]
 * `require 'find'` in bower.rake to fix `uninitialized constant Find` by @cmckni3 [#69][]
 * allow a bundler-like way of specifying versions for Git Repos by @davetron5000 [#70][]
+* Fix bug with `rake assets:precompile` enhancing [#72][]
+* Ensuring executable command doesn't point to a directory by @clouseauu [#73][]
+* Add github option to DSL by @xtian [#75][]
 
 [#65]: https://github.com/42dev/bower-rails/pull/65
 [#69]: https://github.com/42dev/bower-rails/pull/69
 [#70]: https://github.com/42dev/bower-rails/pull/70
+[#72]: https://github.com/42dev/bower-rails/pull/72
+[#73]: https://github.com/42dev/bower-rails/pull/73
+[#74]: https://github.com/42dev/bower-rails/pull/75
 
 ## v0.7.1
 

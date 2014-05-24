@@ -55,6 +55,31 @@ describe BowerRails::Dsl do
       subject.asset :new_hotness, "1.2.3", :git => "git@github.com:initech/tps-kit"
       subject.dependencies.values.should include :new_hotness => "git@github.com:initech/tps-kit#1.2.3"
     end
+
+    it "should accept a github path" do
+      subject.asset :new_hotness, :github => "initech/tps-kit"
+      subject.dependencies.values.should include :new_hotness => "git://github.com/initech/tps-kit"
+    end
+
+    it "should accept a github path and a version and put it all together" do
+      subject.asset :new_hotness, "1.2.3", :github => "initech/tps-kit"
+      subject.dependencies.values.should include :new_hotness => "git://github.com/initech/tps-kit#1.2.3"
+    end
+
+    it "should accept a ref option and set it as a version" do
+      subject.asset :new_hotness, :ref => "b122a"
+      subject.dependencies.values.should include :new_hotness => "b122a"
+    end
+
+    it "should accept a git and ref option and put it all together" do
+      subject.asset :new_hotness, :git => "git@github.com:initech/tps-kit", :ref => "b122a"
+      subject.dependencies.values.should include :new_hotness => "git@github.com:initech/tps-kit#b122a"
+    end  
+
+    it "should accept a github and ref option and put it all together" do
+      subject.asset :new_hotness, :github => "initech/tps-kit", :ref => "b122a"
+      subject.dependencies.values.should include :new_hotness => "git://github.com/initech/tps-kit#b122a"
+    end     
   end
 
   it "should have a private method to validate asset paths" do
@@ -75,6 +100,6 @@ describe BowerRails::Dsl do
     it "should set the default group with custom assets_path" do
       subject.send :assets_path, "assets/somepath"
       subject.send(:default_group).should eq [:vendor, { :assets_path => "assets/somepath" }]
-    end 
+    end
   end
 end
